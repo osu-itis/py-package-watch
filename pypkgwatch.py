@@ -16,7 +16,10 @@ config['GITHUB_PAT'] = os.getenv('GITHUB_PAT', '')
 def main():
     githubs = []
     if not config['GITHUB_ENTERPRISE_PAT'] == '':
-        ghe = github.Github(base_url=f"https://{config['GITHUB_ENTERPRISE_HOST']}/api/v3", login_or_token=config['GITHUB_ENTERPRISE_PAT'])
+        ghe = github.Github(
+            base_url=f"https://{config['GITHUB_ENTERPRISE_HOST']}/api/v3",
+            login_or_token=config['GITHUB_ENTERPRISE_PAT']
+        )
         githubs.append(ghe)
     if not config['GITHUB_PAT'] == '':
         g = github.Github(config['GITHUB_PAT'])
@@ -26,11 +29,15 @@ def main():
     repos = {}
     for g in githubs:
         for repo in g.get_user().get_repos():
+            if repo.archived:
+                # repo is archived, so skip it
+                continue
+
             try:
                 r_file = repo.get_file_contents('requirements.txt')
                 r_content = base64.b64decode(r_file.content).decode('utf-8')
             except github.GithubException:
-                # repo has no requirements.txt, so continue
+                # repo has no requirements.txt, so skip it
                 continue
 
             for line in r_content.split('\n'):
@@ -42,7 +49,9 @@ def main():
                 repos[repo.html_url][package] = version
 
     # get set of unique package names
-    unique_pkgs = set([pkg_name for repo_url, pkgs in repos.items() for pkg_name, version in pkgs.items()])
+    unique_pkgs = set([pkg_name
+                       for repo_url, pkgs in repos.items()
+                       for pkg_name, version in pkgs.items()])
 
     # query PyPI for the latest package versions
     latest_pkgs = {}
@@ -57,7 +66,10 @@ def main():
             if pkg in repo_pkgs and not pkg_version == repo_pkgs[pkg]:
                 if not repo_url in outdated:
                     outdated[repo_url] = {}
-                outdated[repo_url][pkg] = {'current': repo_pkgs[pkg], 'latest': pkg_version}
+                outdated[repo_url][pkg] = {
+                    'current': repo_pkgs[pkg],
+                    'latest': pkg_version
+                }
 
     # print result
     for repo_url in sorted(outdated):
