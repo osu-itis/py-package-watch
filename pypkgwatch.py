@@ -75,8 +75,8 @@ def main():
     for repo_url in sorted(outdated):
         pkgs = outdated[repo_url]
         print(f"\n{repo_url}")
-        for pkg, versions in pkgs.items():
-            print(f"\t{pkg}: {versions['current']} != {versions['latest']}")
+        for pkg in sorted(pkgs, key=lambda item: (item[0].lower())):
+            print(f"\t{pkg}: {pkgs[pkg]['current']} != {pkgs[pkg]['latest']}")
 
 
 if __name__ == '__main__':
