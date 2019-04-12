@@ -43,6 +43,8 @@ def main():
             for line in r_content.split('\n'):
                 if line == '':
                     continue
+                if '==' not in line:
+                    continue
                 (package, version) = line.split('==')
                 if not repo.html_url in repos:
                     repos[repo.html_url] = {}
@@ -57,7 +59,10 @@ def main():
     latest_pkgs = {}
     for pkg in unique_pkgs:
         pypi = requests.get(f"https://pypi.org/pypi/{pkg}/json")
-        latest_pkgs[pkg] = pypi.json()['info']['version']
+        if pypi.status_code == requests.codes.ok:
+            latest_pkgs[pkg] = pypi.json()['info']['version']
+        else:
+            latest_pkgs[pkg] = 'PyPI error - does this package exist?'
 
     # for each python repo, gather outdated packages
     outdated = {}
