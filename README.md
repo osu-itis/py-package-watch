@@ -13,6 +13,9 @@ This script searches all repos accessible to the given user accounts on GitHub.c
 
 Configuration is via environment variables:
 
-* `GITHUB_PAT` - [Personal Access Token](https://help.github.com/articles/creating-a-personal-access-token-for-the-command-line/) for user account on GitHub
-* `GITHUB_ENTERPRISE_HOST` - hostname of GitHub Enterprise instance
-* `GITHUB_ENTERPRISE_PAT` - [Personal Access Token](https://help.github.com/articles/creating-a-personal-access-token-for-the-command-line/) for user account on GitHub Enterprise
+|ENV VAR|Description|
+|----|----|
+|`GITHUB_PAT`|[Personal Access Token](https://help.github.com/articles/creating-a-personal-access-token-for-the-command-line/) for user account on GitHub|
+|`GITHUB_ENTERPRISE_HOST`|Hostname of GitHub Enterprise instance|
+|`GITHUB_ENTERPRISE_PAT`|[Personal Access Token](https://help.github.com/articles/creating-a-personal-access-token-for-the-command-line/) for user account on GitHub Enterprise|
+|`IGNORE_REPOS`|**(Optional)** Ignore repos containing this string; multiple strings must be comma-separated|

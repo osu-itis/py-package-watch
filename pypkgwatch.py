@@ -11,6 +11,10 @@ config = {}
 config['GITHUB_ENTERPRISE_HOST'] = os.getenv('GITHUB_ENTERPRISE_HOST', '')
 config['GITHUB_ENTERPRISE_PAT'] = os.getenv('GITHUB_ENTERPRISE_PAT', '')
 config['GITHUB_PAT'] = os.getenv('GITHUB_PAT', '')
+if os.getenv('IGNORE_REPOS'):
+    config['IGNORE_REPOS'] = os.getenv('IGNORE_REPOS').split(',')
+else:
+    config['IGNORE_REPOS'] = []
 
 
 def main():
@@ -28,7 +32,13 @@ def main():
     # look for 'requirements.txt' in all repos accessible to this user
     repos = {}
     for g in githubs:
-        for repo in g.get_user().get_repos():
+        filtered_repos = g.get_user().get_repos()
+
+        # filter ignored repos out of the list of repos
+        for ignore in config['IGNORE_REPOS']:
+            filtered_repos = [r for r in filtered_repos if ignore not in r.html_url]
+
+        for repo in filtered_repos:
             if repo.archived:
                 # repo is archived, so skip it
                 continue
