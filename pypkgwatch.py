@@ -44,7 +44,7 @@ def main():
                 continue
 
             try:
-                r_file = repo.get_file_contents('requirements.txt')
+                r_file = repo.get_contents('requirements.txt')
                 r_content = base64.b64decode(r_file.content).decode('utf-8')
             except github.GithubException:
                 # repo has no requirements.txt, so skip it
