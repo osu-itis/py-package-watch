@@ -31,6 +31,7 @@ def main():
 
     # look for 'requirements.txt' in all repos accessible to this user
     repos = {}
+    repos_metadata = {}  # dict for storing extra info about repos
     for g in githubs:
         filtered_repos = g.get_user().get_repos()
 
@@ -50,6 +51,7 @@ def main():
                 # repo has no requirements.txt, so skip it
                 continue
 
+            # parse requirements.txt for packages
             for line in r_content.split('\n'):
                 if line == '':
                     continue
@@ -59,6 +61,12 @@ def main():
                 if not repo.html_url in repos:
                     repos[repo.html_url] = {}
                 repos[repo.html_url][package] = version
+
+            # save metadata such as repo name
+            if not repo.html_url in repos_metadata:
+                repos_metadata[repo.html_url] = {}
+            repos_metadata[repo.html_url]['name'] = repo.name
+            repos_metadata[repo.html_url]['full_name'] = repo.full_name
 
     # get set of unique package names
     unique_pkgs = set([pkg_name
@@ -89,7 +97,8 @@ def main():
     # print result
     for repo_url in sorted(outdated):
         pkgs = outdated[repo_url]
-        print(f'\n<a href="{repo_url}">{repo_url}</a>')
+        repo_name = repos_metadata[repo_url]['full_name']
+        print(f"{repo_name} - {repo_url}")
         for pkg in sorted(pkgs, key=lambda item: (item[0].lower())):
             print(f"\t{pkg}: {pkgs[pkg]['current']} != {pkgs[pkg]['latest']}")
 
