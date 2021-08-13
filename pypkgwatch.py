@@ -89,7 +89,7 @@ def main():
     # print result
     for repo_url in sorted(outdated):
         pkgs = outdated[repo_url]
-        print(f"\n{repo_url}")
+        print(f'\n<a href="{repo_url}">{repo_url}</a>')
         for pkg in sorted(pkgs, key=lambda item: (item[0].lower())):
             print(f"\t{pkg}: {pkgs[pkg]['current']} != {pkgs[pkg]['latest']}")
 
