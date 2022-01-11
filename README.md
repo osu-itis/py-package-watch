@@ -6,8 +6,12 @@ This script searches all repos accessible to the given user accounts on GitHub.c
 
 ## Requirements
 
-* Python 3.6+
+* Python 3.8+
 * packages in `requirements.txt`
+
+### Minimum Packages
+
+* PyGithub
 
 ## Configuration
 

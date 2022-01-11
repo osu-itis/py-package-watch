@@ -101,6 +101,7 @@ def main():
         print(f"{repo_name} - {repo_url}")
         for pkg in sorted(pkgs, key=lambda item: (item[0].lower())):
             print(f"\t{pkg}: {pkgs[pkg]['current']} != {pkgs[pkg]['latest']}")
+        print("")  # print empty line as a separator
 
 
 if __name__ == '__main__':
