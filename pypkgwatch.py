@@ -1,7 +1,9 @@
 import base64
-import github
 import os
+
+import github
 import requests
+
 import pprint
 pp_ = pprint.PrettyPrinter(indent=2)
 pp = pp_.pprint
